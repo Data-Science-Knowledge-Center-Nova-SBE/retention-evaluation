@@ -1,0 +1,61 @@
+{% extends "app/index.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container my-5 pb-5">
+    <div class="row">
+
+      <!-- header -->
+      <div class="col-12 font-primary h1 mb-4">
+        Logs
+      </div>
+
+      <!-- logs table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Date</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td class="text-center"> <!-- problem -->
+              {% if log.type == 'P' %}
+              <i class="fas fa-exclamation-circle"></i>
+
+              <!-- submission -->
+              {% elif log.type == 'S' %}
+              <i class="fas fa-arrow-up"></i>
+
+              <!-- training -->
+              {% elif log.type == 'T' %}
+              <i class="fas fa-microchip"></i>
+
+              <!-- reset -->
+              {% elif log.type == 'R' %}
+              <i class="fas fa-undo"></i>
+
+              {% endif %}
+            </td>
+            <td>{{log.timestamp|date:'Y-m-d H:i'}}</td>
+            <td>{{log.description}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+    </div>
+
+  </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+{% endblock %}

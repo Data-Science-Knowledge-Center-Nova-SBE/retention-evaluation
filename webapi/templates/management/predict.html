@@ -1,0 +1,382 @@
+{% extends "app/index.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid  font-secondary mb-5 pb-5">
+    <div class="px-4">
+        <div class="row">
+
+            <!-- left section -->
+            <div class="col-md-10 col-12">
+
+                <!-- grade selection -->
+                <div class="row mt-4 pt-3">
+
+                    <button onclick="location.href='{% url 'management.predict' grade='6' k=20 %}'" class="btn border shadow-sm {% if grade == '6' %}btn-dark{% endif %}">6 Grade</button>
+                    <button onclick="location.href='{% url 'management.predict' grade='8' k=20 %}'" class="btn border shadow-sm ml-3 {% if grade == '8' %}btn-dark{% endif %}">8 Grade</button>
+                    <button onclick="location.href='{% url 'management.predict' grade='9' k=20 %}'" class="btn border shadow-sm ml-3 {% if grade == '9' %}btn-dark{% endif %}">9 Grade</button>
+
+                </div>
+
+                <!-- title -->
+                <div class="row mt-3 pt-3">
+
+                    <!-- title text -->
+                    <div class="col-auto pl-0 font-primary h5 pt-1">Students to identify</div>
+
+                    <!-- input -->
+                    <div class="col-md-2 col-8 font-weight-bold ml-1">
+
+                        <!-- number -->
+                        <input type="number" class="form-control form-control-sm" disabled="disabled" value="{{k}}">
+
+                    </div>
+
+                    <div class="d-none col-2 pl-0">
+                        <button class="btn btn-sm border shadow-sm" onclick="location.href='{% url 'management.predict' grade='9' k=20 %}'">
+                            Calculate
+                        </button>
+                    </div>
+
+                    <!-- error modeling -->
+                    {% if error_modeling %}
+                    <div class="col-12 pl-0  h5 text-danger mt-4 font-weight-bold">Modeling Error</div>
+                    {% endif %}
+
+                    <!-- header -->
+                    <div class="col-12 mt-4 border-bottom py-2">
+                        <div class="row">
+                            <!-- name -->
+                            <div class="col-3 mt-1 h4 font-primary">
+                                Student
+                            </div>
+                            <!-- identified -->
+                            <div class="col-3 mt-1 h4 font-primary">
+                                Indentified for Intervention
+                            </div>
+                            <!-- indicators -->
+                            <div class="col-6 mt-1 h4 font-primary">
+                                Indicators
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- mockup data -->
+                    {% for student in predictions %}
+                    <div class="col-12 border-bottom py-2">
+                        <div class="row">
+                            <!-- name -->
+                            <div class="col-3 mt-1">
+                                {{student.name}}
+                            </div>
+                            <!-- identified -->
+                            <div class="col-3 mt-1">
+                                {% if student.retention_risk %}
+                                <span class="text-danger">Yes</span>
+                                {% else %}
+                                No
+                                {% endif %}
+                            </div>
+                            <!-- indicators -->
+                            <div class="col-6 mt-1" style="font-size: 0.6em">
+                                {% for indicator in student.indicators %}
+                                <span class="font-weight-bold">{{indicator.0}}</span> ({{indicator.1}})
+                                <br>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+
+                {% if not error %}
+                <div>
+
+
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- right section -->
+            {% if not error %}
+            <div class="col-md-6 col-12 mt-5 pt-4 pl-5">
+                <div class="row mt-n3">
+
+                </div>
+                <canvas id="lineChart" width="400" height="240"></canvas>
+
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var baseUrl = window.location.origin;
+
+    predictions = true;
+
+    function updateIce() {
+        for (var i = 0; i < 7; i++) {
+            var value;
+            if (predictions) {
+                value = $("#kgpescado-" + i).val();
+            } else {
+                value = $("#lastweek-" + i).val();
+            }
+            value *= $("#multiplier-" + i).val();
+            $("#ice-" + i).html(value);
+        }
+    }
+
+    function exportCSV() {
+        const rows = [
+            ["lota", "data", "pescado semana anterior (kg)", "previsão de pescado (kg)", "multiplicador", "previsão de gelo (kg)"], [], [], [], [], [], [], []
+        ];
+
+
+        var lota = $("#lota").text().trim();
+
+        for (var i = 0; i < 7; i++) {
+            var j = i + 1;
+            rows[j].push(lota);
+            rows[j].push($("#days-" + i).attr("day"));
+            rows[j].push($("#lastweek-" + i).val());
+            rows[j].push($("#kgpescado-" + i).val());
+            rows[j].push($("#multiplier-" + i).val());
+            rows[j].push($("#ice-" + i).text().replace(/\s+/g, " "));
+        }
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+
+        rows.forEach(function (rowArray) {
+            let row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+        // download
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "previsao_pescado_" + lota + "_" + $("#days-0").attr("day") + ".csv");
+        document.body.appendChild(link);
+
+        link.click();
+    }
+
+    function activatePredictions(activate) {
+        predictions = activate;
+        var oldId;
+        var newId;
+        if (predictions) {
+            oldId = "Lastweek";
+            newId = "Predictions";
+
+            for (var i = 0; i < 7; i++) {
+                $("#lastweek-" + i).addClass("my-text-secondary");
+                $("#kgpescado-" + i).removeClass("my-text-secondary");
+            }
+
+        } else {
+            newId = "Lastweek";
+            oldId = "Predictions";
+
+            for (var i = 0; i < 7; i++) {
+                $("#lastweek-" + i).removeClass("my-text-secondary");
+                $("#kgpescado-" + i).addClass("my-text-secondary");
+            }
+        }
+
+        $("#border" + oldId).removeClass("shadow-sm");
+        $("#border" + oldId).removeClass("border");
+        $("#border" + oldId).removeClass("bg-selected");
+        $("#title" + oldId).addClass("my-text-secondary");
+
+        $("#border" + newId).addClass("shadow-sm");
+        $("#border" + newId).addClass("border");
+        $("#border" + newId).addClass("bg-selected");
+        $("#title" + newId).removeClass("my-text-secondary");
+
+
+        updateIce();
+    }
+
+    updateIce();
+
+    $(".simple-inpt").change(function () {
+        updateIce();
+    })
+
+    function toggleLotaSelection() {
+        $("#lotaSelect").toggle();
+    }
+
+</script>
+
+
+<script>
+    var days = {
+    {
+        days | safe
+    }
+    }
+    ;
+    var labels = [];
+    for (var i = 0; i < days.length; i++) {
+        labels.push(days[i]["weekday"]);
+    }
+
+    var ctx = document.getElementById('lineChart').getContext('2d');
+    var gradient1 = ctx.createLinearGradient(0, 0, 0, 240);
+    gradient1.addColorStop(0, 'rgba(244,81,30,0.5)');
+    gradient1.addColorStop(1, 'rgba(255,255,255,0.5)');
+
+    var gradient2 = ctx.createLinearGradient(0, 0, 0, 240);
+    gradient2.addColorStop(0, 'rgba(30,136,229,0.5)');
+    gradient2.addColorStop(1, 'rgba(255,255,255,0.5)');
+
+    var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Semana Anterior',
+                    data: {{last_week | escape
+            }
+        },
+        borderColor
+    :
+    'rgb(30,136,229)',
+        pointBackgroundColor
+    :
+    'rgb(30,136,229)',
+        backgroundColor
+    :
+    gradient2,
+        tension
+    :
+    0.1,
+        pointRadius
+    :
+    7,
+    //borderDash: [10, 10]
+    },
+    {
+        label: 'Previsão',
+            data
+    :
+        {
+            {
+                predictions | escape
+            }
+        }
+    ,
+        borderColor: 'rgb(244,81,30)',
+            pointBackgroundColor
+    :
+        'rgb(244,81,30)',
+            backgroundColor
+    :
+        gradient1,
+            pointRadius
+    :
+        7,
+            tension
+    :
+        0.1
+    }
+    ]
+    },
+    options: {
+        title: {
+            display: false,
+                text
+        :
+            'KG de Pescado ao Longo da Semana',
+                fontFamily
+        :
+            'Open Sans',
+                fontColor
+        :
+            '#000000'
+        }
+    ,
+        legend: {
+            display: false
+        }
+    ,
+        tooltips: {
+            mode: 'index',
+                position
+        :
+            'nearest',
+                intersect
+        :
+            false,
+                titleFontSize
+        :
+            12,
+                bodyFontSize
+        :
+            18,
+                xPadding
+        :
+            10,
+                yPadding
+        :
+            10,
+                borderWidth
+        :
+            1,
+                bodyFontStyle
+        :
+            'Open Sans',
+                itemSort
+        :
+            (a, b, data) => b.yLabel - a.yLabel
+        }
+    ,
+        scales: {
+            yAxes: [{
+                position: 'right',
+
+                display: true,
+                gridLines: {
+                    display: true,
+                    drawBorder: true,
+                    drawOnChartArea: false
+                },
+                ticks: {
+                    autoSkip: false,
+                    maxTicksLimit: 4,
+                    maxRotation: 0,
+                    minRotation: 0,
+                    fontFamily: 'Open Sans'
+                }
+            }],
+                xAxes
+        :
+            [{
+                display: true,
+                gridLines: {
+                    display: true,
+                    drawBorder: true,
+                    drawOnChartArea: false
+                },
+                fontFamily: 'Open Sans'
+            }],
+                y
+        :
+            {
+                beginAtZero: true
+            }
+        }
+    }
+    })
+    ;
+</script>
+{% endblock %}

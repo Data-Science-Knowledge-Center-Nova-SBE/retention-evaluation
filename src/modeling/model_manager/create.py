@@ -1,0 +1,26 @@
+import db
+
+def create_meta():
+    db.execute("""CREATE TABLE IF NOT EXISTS model_manager (id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+    datetime TEXT, 
+    model_name TEXT, 
+    description TEXT,
+    dataset_id INTEGER, 
+    n_columns INTEGER(32), 
+    columns TEXT, 
+    accuracy FLOAT,
+    precision_at_k_10 FLOAT, 
+    precision_at_k_15 FLOAT, 
+    precision_at_k_20 FLOAT, 
+    precision_ FLOAT,
+    recall FLOAT,
+    f1 FLOAT,
+    feature_importance LONGTEXT, 
+    extra_features_test_hash TEXT, 
+    extra_features_test_filename TEXT, 
+    y_test_hash TEXT, 
+    y_test_filename TEXT, 
+    y_pred_hash TEXT,
+    y_pred_filename TEXT, 
+    model_hash TEXT,
+    model_filename TEXT);""")

@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Playfair+Display&display=swap');
+
+
+.font-primary{
+  font-family: 'Playfair Display', serif;
+}
+
+
+.font-secondary{
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+
+.btn:focus, .btn:active {
+  -webkit-box-shadow: none;
+  outline: none !important;
+  box-shadow: none;
+}
+.form-control:focus, .form-control:active {
+  -webkit-box-shadow: none;
+  outline: none !important;
+  box-shadow: none;
+}
+.no-outline:focus, .no-outline:active {
+  -webkit-box-shadow: none;
+  outline: none !important;
+  box-shadow: none;
+}
+
+.no-decoration, .no-decoration:focus, .form-control:active {
+  text-decoration: none;
+  text-underline: none;
+}
+
+
+.centered-pred {
+    top:15%;
+    right: 10%;
+    position:fixed;
+    overflow-x:hidden;
+}
+
+
+.underline-inpt{
+    border-bottom: 2px solid black;
+}
+@media (min-width: 768px){
+  .seven-cols .col-md-1,
+  .seven-cols .col-sm-1,
+  .seven-cols .col-lg-1  {
+    width: 100%;
+    *width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .seven-cols .col-md-1,
+  .seven-cols .col-sm-1,
+  .seven-cols .col-lg-1 {
+    width: 14.285714285714285714285714285714%;
+    *width: 14.285714285714285714285714285714%;
+  }
+}
+
+/**
+ *  The following is not really needed in this case
+ *  Only to demonstrate the usage of @media for large screens
+ */
+@media (min-width: 1200px) {
+  .seven-cols .col-md-1,
+  .seven-cols .col-sm-1,
+  .seven-cols .col-lg-1 {
+    width: 14.285714285714285714285714285714%;
+    *width: 14.285714285714285714285714285714%;
+  }
+}

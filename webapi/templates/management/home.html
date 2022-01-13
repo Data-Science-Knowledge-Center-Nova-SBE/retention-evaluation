@@ -1,0 +1,422 @@
+{% extends "app/index.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container my-5 pb-5">
+    <!-- Instructions -->
+    <div class="row">
+
+
+      <!-- model card -->
+      <div class="col-12 font-secondary mt-2 pl-3 h5 bg-white border shadow px-5 py-5  rounded">
+        <!-- header -->
+        <div class="h1 font-primary mb-5">Model</div>
+
+        <!-- train model -->
+        <span class="h3">Trained model</span>
+        <span class="ml-3 badge badge-pill badge-light border shadow-sm px-3 py-2 h6">
+          <i id="training" class="fas fa-circle {% if state.training %}text-warning{% elif state.trained %}text-success{% else %}text-danger{% endif %}"></i>
+          <span class="ml-2" id="training-text">
+
+                {% if state.training %}
+                  training
+                {% elif state.trained %}
+                  {{state.last_train|date:'Y-m-d H:i'}}
+                {% else %}
+                  not available
+                {% endif %}
+         </span>
+        </span>
+
+        <div class="w-100 mt-4">
+          <!-- buttons -->
+          <button class="btn btn-ligth font-secondary font-weight-bold border shadow-sm" data-toggle="modal" data-target="#train-modal" style="background-color: white"> INSTRUCTIONS</button>
+          <button id="train" class="btn btn-dark font-secondary font-weight-bold ml-2 shadow-sm" style="background-color: black"> TRAIN</button>
+
+          <!-- spinner -->
+          <div class="spinner-border ml-4" role="status" id="trainSpinner" style="display: none">
+            <span class="sr-only">Loading...</span>
+          </div>
+
+        </div>
+
+
+        <!-- progress bar section -->
+        <div  id="trainProgress" class="w-100" style="display: none">
+          <!-- title -->
+          <div class="mt-4  font-secondary h4 row font-weight-bold" >
+            <!-- start -->
+            <div class="col-3 ">
+              Start
+            </div>
+            <!-- processed -->
+            <div class="col-6 text-center">
+              Data Processed
+            </div>
+            <!-- trained -->
+            <div class="col-3 text-right">
+              Trained
+            </div>
+        </div>
+
+          <!-- progressbar -->
+          <div class="w-100 mt-2 text-danger font-secondary h6">
+
+            <div class="progress" style="height: 2em">
+              <div class="progress-bar progress-bar-striped bg-dark progress-bar-animated"
+              id="progressbar"
+              role="progressbar"
+              style="width: 25%;"
+              aria-valuenow="25"
+              aria-valuemin="0"
+              aria-valuemax="100"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- error section -->
+        <div class="w-100 mt-4 text-danger font-secondary h6" id="trainError" style="display: none">
+        </div>
+
+
+
+
+
+      </div>
+
+
+
+    </div>
+
+
+
+  </div>
+
+
+  <!-- data modal -->
+  <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="data-modal" aria-hidden="true" id="data-modal">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content p-5">
+
+        <span class="h5">Submit a .csv file separated by "," with the following columns:</span>
+
+        <div class="h5 mt-3">ID, Raca, Idade, Sexo, Duracao diabetes, Data registo, Peso, Perimetro abdominal, IMC,
+        TA Sistolica, TA Diastolica, Pressao de pulso, Potassio, Colesterol Total, LDL, HDL,
+        Nao HDL, Trigliceridos, HbA1c, Albuminuria, Proteinuria, Creatinuria, Creatinina, MDRD,
+        MDRD Estadio, Delta MDRD, Delta MDRD/t, Medicacao (ATC), Medicacao (CFT), Medicacao (Principio ativo),
+        Complicacoes Oftalmologicas, Complicacoes Cardiovasculares, Complicacoes Podologicas, Complicacoes Neurologicas,
+        Doenca Vascular Periferica, Complicacoes Nefrologicas, Complicacoes Outras</div>
+
+      </div>
+    </div>
+  </div>
+
+ <!-- pledges modal -->
+  <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="pledges-modal" aria-hidden="true" id="pledges-modal">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content p-5">
+
+        <span class="h5">Submit a .csv file separated by "," with the following columns:</span>
+
+        <table class="table mt-5">
+          <thead>
+            <tr>
+              <th scope="col">Column Name</th>
+              <th scope="col">Type</th>
+              <th scope="col">Description</th>
+              <th scope="col">Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">IID</th>
+              <td>int</td>
+              <td>Pledge ID</td>
+              <td>[21574, 21575, 21576, 21577, 21578, 21579, 21580, 21581, '...'] </td>
+            </tr>
+            <tr>
+              <th scope="row">UID</th>
+              <td>string (hash)</td>
+              <td>User ID</td>
+              <td>['c16a5320fa475530d9583c34fd356ef5', '...']</td>
+            </tr>
+            <tr>
+              <th scope="row">PID</th>
+              <td>int</td>
+              <td>Project ID</td>
+              <td>[1025, 1026, 1023, 1017, 1022, 1018, 1020, 1029, 1030, 1032, '...'] </td>
+            </tr>
+            <tr>
+              <th scope="row">PAYDATE</th>
+              <td>datetime</td>
+              <td>Payment date and time</td>
+              <td>['16-08-2011 21:12', '13-11-2011 21:15', '...']</td>
+            </tr>
+            <tr>
+              <th scope="row">AMOUNT</th>
+              <td>int</td>
+              <td>Contribution amount</td>
+              <td>[5, 30, 10, 180, 1250, 130, 20, 100, 60, 35, 580, 50, 40, 150, 25, 165, '...'] </td>
+            </tr>
+            <tr>
+              <th scope="row">PAYMETHOD</th>
+              <td>string (categorical)</td>
+              <td>Payment method</td>
+              <td>['APOIO', 'PAYPAL', '\\N', 'TRANSF', 'MBWAY', 'MB', 'CC']  </td>
+            </tr>
+            <tr>
+              <th scope="row">UNCOND_CHANNEL</th>
+              <td>binary</td>
+              <td>Unconditional contribution</td>
+              <td>[0, 1]</td>
+            </tr>
+            <tr>
+              <th scope="row">ANONYMOUS</th>
+              <td>binary</td>
+              <td>If is an anonymous contribution</td>
+              <td>['\\N', '0', '1', 1, 0]  </td>
+            </tr>
+            <tr>
+              <th scope="row">COMMENT</th>
+              <td>string</td>
+              <td>Contribution comment</td>
+              <td> ['\\N', 'Força e boa sorte, Avós', nan, '...'] </td>
+            </tr>
+
+
+
+
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+
+ <!-- rewards modal -->
+  <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="rewards-modal" aria-hidden="true" id="rewards-modal">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content p-5">
+
+        <span class="h5">Submit a .csv file separated by "," with the following columns:</span>
+
+        <table class="table mt-5">
+          <thead>
+            <tr>
+              <th scope="col">Column Name</th>
+              <th scope="col">Type</th>
+              <th scope="col">Description</th>
+              <th scope="col">Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">PROJECT_ID</th>
+              <td>int</td>
+              <td>Project ID</td>
+              <td>[1017, 1018, 1020, 1022, 1023, 1024, '...']</td>
+            </tr>
+            <tr>
+              <th scope="row">REWARD_ID</th>
+              <td>int</td>
+              <td>Reward ID</td>
+              <td>[18622, 18623, 18624, 18625, 18639, '...']</td>
+            </tr>
+            <tr>
+              <th scope="row">AMOUNT</th>
+              <td>int</td>
+              <td>Reward amount</td>
+              <td>[10, 20, 30, 100, 15, 80, 25, 200, '...'] </td>
+            </tr>
+            <tr>
+              <th scope="row">TITLE</th>
+              <td>string</td>
+              <td>Title</td>
+              <td>[nan, 'Agradecimento...'] </td>
+            </tr>
+            <tr>
+              <th scope="row">DESCRIPTION</th>
+              <td>string</td>
+              <td>Description</td>
+              <td>['Um exemplar do livro', '...']</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+
+ <!-- train modal -->
+  <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="train-modal" aria-hidden="true" id="train-modal">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content p-5">
+
+        <span class="h5">This step may take some time (40 minutes approximately).<br><br>
+         The trained model will be used for future predictions. <br><br>
+         You should re-train your model with a yearly frequency.</span>
+
+
+      </div>
+    </div>
+  </div>
+
+ <!-- predict modal -->
+  <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="predict-modal" aria-hidden="true" id="predict-modal">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content p-5">
+
+        <span class="h5">To predict results you can use the interface <a href="{% url 'management.predict' grade='9' k=20 %}">here</a> or the API.</span>
+
+
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+
+  var baseUrl = window.location.origin + "/api/";
+  var url = baseUrl+"/api/";
+
+  function successSubmission(name){
+
+    setTimeout(() => {
+      window.location.reload();
+      $("#"+name+"Spinner").hide();
+      $("#"+name+"Upload").show();
+    }, 5000);
+  }
+
+  function errorSubmission(name,description){
+    $("#"+name+"Spinner").hide();
+    $("#"+name+"Upload").show();
+
+    // show error
+    $("#"+name+"Error").html(description);
+    $("#"+name+"Error").show();
+
+  }
+
+  function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+  async function controlProgress(){
+     $('#trainProgress').show();
+    updateProgressbar('init');
+
+
+    while ($('#progressbar').attr('aria-valuenow')!='100'){
+      console.log($('#progressbar').attr('aria-valuenow'));
+      await sleep(5000);
+      console.log("request");
+
+      var url = baseUrl+"modeling/train/state/"
+
+      $.ajax({
+          url: url,
+          type: 'GET',
+          headers: {"Authorization": "Token {{apiKey}}"},
+          success: function (data){
+            updateProgressbar(data.state)
+          },
+      });
+    }
+
+
+
+  }
+
+  function updateProgressbar(state){
+
+    var value;
+
+    if(state=="complete"){
+      value=100;
+      $("#training").removeClass("text-warning").addClass("text-success");
+      $("#training-text").html("trained");
+      $("#progressbar").attr("aria-valuenow",100);
+    }else if(state=="modeling"){
+      value=50;
+      $("#progressbar").attr("aria-valuenow",50);
+    }else if (state=="init"){
+      value=10;
+      $("#progressbar").attr("aria-valuenow",10);
+    }
+
+    $('#progressbar').css("width", value+"%");
+  }
+
+  function submitFile(name){
+     $("#"+name+"Spinner").show();
+     $("#"+name+"Upload").hide();
+     $("#"+name+"Error").hide();
+
+     var url = baseUrl+"data/";
+
+    var fd = new FormData();
+    var files = $('#'+name+'File')[0].files[0];
+    fd.append('file', files);
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: fd,
+        headers: {"Authorization": "Token {{apiKey}}"},
+        contentType: false,
+        processData: false,
+        success: function (data){
+          successSubmission(name)
+        },error: function(xhr, status, error) {
+          errorSubmission(name,xhr.responseJSON.error);
+        }
+    });
+  }
+
+  $("#dataUpload").click(function() {
+    submitFile("data");
+  })
+
+
+  $("#train").click(function() {
+    var url = baseUrl+"modeling/train/"
+
+    $("#train").hide();
+    $("#training").removeClass("text-danger").removeClass("text-success").addClass("text-warning");
+    $("#training-text").html("training");
+
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        headers: {"Authorization": "Token {{apiKey}}"},
+        success: function(data){
+          controlProgress();
+        },
+        error: function(xhr, status, error) {
+          errorSubmission("train",xhr.responseJSON.error);
+          $("#training").removeClass("text-warning").addClass("text-danger");
+          $("#training-text").html("not available");
+          $("#train").show();
+        }
+    });
+
+  })
+
+  $(document).ready(function() {
+      updateProgressbar('init');
+  });
+
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% load static %}
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white font-lora shadow-sm px-4">
+
+    <!--logos -->
+    <a class="navbar-brand font-lora text-logo font-weight-bold " href="{% url 'management.home' %}">
+        <img class="mt-1" style="max-height: 45px" src="{% static 'app/images/logo.png' %}"/>
+        <img class="mt-1 ml-2" style="max-height: 55px" src="{% static 'app/images/atb.png' %}"/>
+        <img class="mt-1 ml-3" style="max-height: 45px" src="{% static 'app/images/SocialEquityInitiative.png' %}"/>
+
+    </a>
+
+
+    <!-- icons -->
+    <div class="ml-auto mt-2">
+
+        <a class="d-none h5 no-decoration text-dark mr-3" href="{% url 'management.train' %}"
+           style="text-decoration: none">
+            <i class="fas fa-info-circle"></i>
+        </a>
+
+        <a class="h5 no-decoration text-dark mr-3" href="{% url 'management.api' %}" style="text-decoration: none">
+            <i class="fas fa-book"></i>
+
+        </a>
+
+        <a class="h5 no-decoration text-dark" href="{% url 'management.predict' grade=9 k=20%}"
+           style="text-decoration: none">
+            <i class="fas fa-calculator"></i>
+        </a>
+
+
+    </div>
+
+    <!-- settings -->
+    <div class="dropdown h5 mt-2 ml-2 pt-2">
+        <!-- button -->
+        <button class="btn bg-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
+        <!-- actions -->
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            <!-- docs -->
+            <a class="d-none dropdown-item px-4 py-3" href="{% url 'management.api' %}">
+                <i class="fas fa-book mr-2"></i>
+                Documentation
+            </a>
+
+            <!-- logs -->
+            <a class="d-none dropdown-item px-4 py-3" href="{% url 'management.logs' %}">
+                <i class="fas fa-history mr-2"></i>
+                Logs
+            </a>
+
+            <!-- reset -->
+            <a class="d-none dropdown-item px-4 py-3" href="{% url 'management.reset' %}">
+                <i class="fas fa-undo mr-2"></i>
+                Reset
+            </a>
+
+
+            <!-- logout -->
+            <a class="dropdown-item px-4 py-3" href="{% url 'authsite.logout' %}">
+                <i class="fas fa-sign-out-alt mr-2"></i>
+                Logout
+            </a>
+        </div>
+    </div>
+
+</nav>

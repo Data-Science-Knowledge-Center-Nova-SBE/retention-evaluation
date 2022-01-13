@@ -1,0 +1,1 @@
+This folder contains temporary files that should not go to the repository.

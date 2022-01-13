@@ -1,0 +1,82 @@
+{% extends "app/index.html" %}
+{% load static %}
+
+{% block head %}
+  <style>
+    body {
+      background-color: #FAFAFA;
+    }
+
+  </style>
+
+{% endblock %}
+
+{% block wrapper %}
+
+  <div class="container-fluid">
+
+    <div class="row justify-content-center mt-5">
+
+      <div class="col-md-10 col-lg-4 mb-3 border rounded p-5 bg-white shadow-sm">
+
+
+        <div class="row ">
+          <div class="col-4 pr-0">
+            <img class="w-100" src="{% static 'app/images/logo.png' %}"/>
+          </div>
+
+        </div>
+
+        <div class="row mt-5 col">
+          <h4 class="font-primary " style="font-weight: 200">Iniciar Sessão</h4>
+        </div>
+
+
+        <form action="{% url 'authsite.login' %}"  method="POST"
+              name="login-form">
+          {% csrf_token %}
+
+
+          <div class="row  mt-3">
+            <div class="col-12">
+              <input type="text" class="form-control form-control-lg h4 font-weight-normal w-100 " name="username" placeholder="Nome">
+            </div>
+          </div>
+
+          <div class="row mt-4  ">
+            <div class="col-12">
+              <input type="password" class="form-control form-control-lg h4 font-weight-normal w-100" name="password" placeholder="Senha">
+            </div>
+          </div>
+
+
+          <div class="row mt-4 font-lora justify-content-end">
+
+
+            <div class="col-4 mt-3 text-center">
+              <button type="submit" class="col-12 btn font-secondary px-1 text-white"
+                      style="background-color: black">ENTRAR
+              </button>
+            </div>
+          </div>
+        </form>
+
+
+
+
+        {% if failedLogin %}
+          <div class="row text-center font-secondary text-danger mt-4" >
+            <div class="col-12 h6 text-uppercase">Nome ou senha incorrecta</div>
+          </div>
+        {% endif %}
+
+
+      </div>
+
+    </div>
+  </div>
+
+
+
+{% endblock %}
+

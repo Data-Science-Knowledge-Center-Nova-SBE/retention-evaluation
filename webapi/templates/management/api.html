@@ -1,0 +1,556 @@
+{% extends "app/index.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5 pb-5">
+
+    <!-- API key -->
+    <div class="row mt-5">
+
+        <div class="col-12 font-primary h1">
+            API Key
+        </div>
+
+        <div class="col-12 font-secondary mt-3 h5">
+            <i class="fas fa-key"></i> <span class="ml-3">Token {{apiKey}}</span>
+            <button id="renew" class="btn btn-default border shadow-sm ml-4 px-4" onclick="renew()">Renew</button>
+        </div>
+
+        <div class="col-12 font-secondary mt-2 small">
+            The API key must be on every HTTP request on the Authorization header (do not forget to include the prefix
+            "Token").
+        </div>
+
+
+    </div>
+
+
+    <!-- API Docs -->
+    <div class="row mt-5">
+
+        <div class="col-12 font-primary h1">
+            Documentation
+        </div>
+
+        <!-- swagger -->
+        <div class="d-none col-12 font-secondary mt-4 h5">
+            <i class="fas fa-book"></i>
+            <span class="ml-3">swagger</span>
+            <a id="swagger" class="ml-2" href="" style="text-decoration: none">view</a>
+        </div>
+
+        <!-- redoc -->
+        <div class="d-none col-12 font-secondary mt-2 h5">
+            <i class="fas fa-book"></i>
+            <span class="ml-3">redoc</span>
+            <a id="redoc" class="ml-2" href="" style="text-decoration: none">view</a>
+        </div>
+
+        <!-- 9 grade -->
+        <a class="btn col-12 border  text-left h3 p-4 mt-4 mx-2"
+           data-toggle="collapse"
+           href="#collapse9"
+           role="button" aria-expanded="false"
+           aria-controls="collapse9">
+            <span class="h2 font-secondary">9 Grade</span>
+        </a>
+
+        <div class="collapse" id="collapse9">
+            <div class="col-12 font-secondary mt-4 h4 font-weight-bold">
+                POST
+            </div>
+
+            <div class="col-12 font-secondary mt-2 h4 font-weight-bold">
+                /api/modeling/predict/9-grade
+            </div>
+
+            <!-- description -->
+            <div class="col-12 font-secondary mt-3">
+                The endpoint receives a table in JSON with the column names in the first row, which must always be the
+                same,
+                and the following rows refer to the student’s data. The request should be sent to all school students.
+                <br> <br>
+                Example Data:
+            </div>
+
+            <!-- input -->
+            <div class="col-12 font-secondary mt-3" style="font-size: 0.6em;background-color: #fafafa">
+
+
+                <br>
+                [
+                ['nProcesso', 'agrupamento', 'anoLetivo', 'ano', 'escalao', 'dataNascimento', 'genero', 'nacionalidade',
+                'linguaMaterna', 'anoEscMae', 'distrito', 'class1P_ingles', 'class1P_ling_estrang', 'class1P_portugues',
+                'class1P_matematica', 'class1P_ed_fis', 'class1P_art_tecn', 'class1P_cienc_fis_nat',
+                'class1P_cienc_soc_huma',
+                'class1P_avg', 'class2P_ingles', 'class2P_ling_estrang', 'class2P_portugues', 'class2P_matematica',
+                'class2P_ed_fis', 'class2P_art_tecn', 'class2P_cienc_fis_nat', 'class2P_cienc_soc_huma', 'class2P_avg',
+                'class3P_ingles', 'class3P_ling_estrang', 'class3P_portugues', 'class3P_matematica', 'class3P_ed_fis',
+                'class3P_art_tecn', 'class3P_cienc_fis_nat', 'class3P_cienc_soc_huma', 'class3P_avg',
+                'negative_class_ratio_1P',
+                'negative_class_ratio_2P', 'negative_class_ratio_3P', 'negative_class_ratio_nuclear_1P',
+                'negative_class_ratio_not_nuclear_1P', 'negative_class_ratio_nuclear_2P',
+                'negative_class_ratio_not_nuclear_2P',
+                'negative_class_ratio_nuclear_3P', 'negative_class_ratio_not_nuclear_3P', 'nFaltas_J_total_ingles',
+                'nFaltas_J_total_ling_estrang', 'nFaltas_J_total_matematica', 'nFaltas_J_total_portugues',
+                'nFaltas_J_total_ed_fis', 'nFaltas_J_total_art_tecn', 'nFaltas_J_total_cienc_fis_nat',
+                'nFaltas_J_total_cienc_soc_huma', 'nFaltas_J_total', 'nFaltas_I_total_ingles',
+                'nFaltas_I_total_ling_estrang',
+                'nFaltas_I_total_matematica', 'nFaltas_I_total_portugues', 'nFaltas_I_total_ed_fis',
+                'nFaltas_I_total_art_tecn',
+                'nFaltas_I_total_cienc_fis_nat', 'nFaltas_I_total_cienc_soc_huma', 'nFaltas_I_total', 'nFaltas_total',
+                'per_miss_J_total_ingles', 'per_miss_J_total_ling_estrang', 'per_miss_J_total_matematica',
+                'per_miss_J_total_portugues', 'per_miss_J_total_ed_fis', 'per_miss_J_total_art_tecn',
+                'per_miss_J_total_cienc_fis_nat', 'per_miss_J_total_cienc_soc_huma', 'per_miss_J_total',
+                'per_miss_I_total_ingles', 'per_miss_I_total_ling_estrang', 'per_miss_I_total_matematica',
+                'per_miss_I_total_portugues', 'per_miss_I_total_ed_fis', 'per_miss_I_total_art_tecn',
+                'per_miss_I_total_cienc_fis_nat', 'per_miss_I_total_cienc_soc_huma', 'per_miss_I_total',
+                'per_miss_total',
+                'distrito_agrup', 'teip_agrup', 'baixa_densidade_agrup'],
+                <br>
+                [10123, 'A49', '2015/2016', 7, 3, 12005, 'Feminino', 'Portugal', 'Portugal', 'Licenciatura', 'Aveiro',
+                5.0,
+                5.0,
+                4.0, 4.0, 4.0, 4.0, 4.0, 4.5, 4.35, 5.0, 4.0, 4.0, 4.0, 5.0, 5.0, 4.0, 4.5, 4.55, 5.0, 5.0, 5.0, 4.0,
+                5.0,
+                5.0,
+                5.0, 4.5, 4.85, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 1.0, 0.0, 2.0, 3.0, 2.0,
+                10.0,
+                0.0,
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.009615384615384616, 0.004807692307692308, 0.0,
+                0.015957446808510637, 0.012032085561497326, 0.009615384615384616, 0.0520279939084695, 0.0, 0.0, 0.0,
+                0.0,
+                0.0,
+                0.0, 0.0, 0.0, 0.0, 0.0520279939084695, 'Aveiro', 0, 0],
+                …
+                ]
+            </div>
+
+
+            <!-- output -->
+            <div class="col-12 font-secondary mt-4">
+                The returned output is a list of students with:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- nProcesso, the student id sent in the input data;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- score, a value between 0 and 1, values closer to 1
+                indicate a higher risk to not pass;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- importance, a list of features with the importance in
+                the
+                prediction result, the importance of each feature
+                is a number and can be negative, higher the value, higher the importance in the predicted result.
+                <br><br>
+            </div>
+
+            <!-- example -->
+            <div class="col-12 font-secondary mt-3" style="font-size: 0.6em;background-color: #fafafa">
+                [
+                {
+                ‘nProcesso’: 10123,
+                ‘score’: 0.23,
+                'importance': {
+                'ano': -0.00040902125418660284, 'Escalão': -0.00012698431
+                69583294, 'Género': -1.8061953029913737e-05, 'Língua Materna': 9.121611812410298e-05, 'Rácio de N
+                egativas em Classificação Intermédia': 0.009342703950332015, 'Rácio de Negativas em Classificação
+                Intermédia - Disciplinas Nucleares': 0.003890285427562326, 'Rácio de Negativas em Classificação
+                Intermédia - Disciplinas Não Nucleares': 0.006103044842520674, 'Rácio de Negativas em Classificaç
+                ão Final': 0.01365611848646585, 'Rácio de Negativas em Classificação Final - Disciplinas Nucleare
+                s': 0.0038185026923959406, 'Rácio de Negativas em Classificação Final - Disciplinas Não Nucleares
+                ': 0.0020751686929889658, 'Classificação Intermédia - Arte e Tecnologia': -0.00016542233787306948
+                , 'Classificação Intermédia - Ciências Físicas e Naturais': 0.0012368970369314328, 'Classificação
+                Intermédia - Ciências Sociais e Humanas': 0.001658538266326522, 'Classificação Intermédia - Educ
+                ação Física': 0.0010389875763937688, 'Classificação Intermédia - Inglês': 0.0001934742917755753,
+                'Classificação Intermédia - Língua Estrangeira II': 0.0005448171087403012, 'Classificação Intermé
+                dia - Matemática': 0.0006515675192692472, 'Classificação Intermédia - Português': 0.0014005933080
+                816866, 'Classificação Final - Arte e Tecnologia': 0.00017951414248146383, 'Classificação Final -
+                Ciências Físicas e Naturais': 0.0004523503414169608, 'Classificação Final - Ciências Sociais e H
+                umanas': -0.002037154351998498, 'Classificação Final - Educação Física': 0.00011108744646181903,
+                'Classificação Final - Inglês': -0.00025692130098165867, 'Classificação Final - Língua Estrangeir
+                a II': -3.208098676389839e-05, 'Classificação Final - Matemática': 0.0009890805759258437, 'Classi
+                ficação Final - Português': 0.0007452002060877028, 'Classificação Média Intermédia': 0.0099090544
+                77930277, 'Classificação Média Final': 0.010629253816122506, 'Número de Faltas Injustificadas - A
+                rte e Tecnologia': 0.0001972581748844903, 'Número de Faltas Justificadas - Arte e Tecnologia': 0.
+                00018276136677922118, 'Número de Faltas Injustificadas - Ciências Físicas e Naturais': 0.00037195
+                34352414444, 'Número de Faltas Justificadas - Ciências Físicas e Naturais': 0.0001330298518472087
+                4, 'Número de Faltas Injustificadas - Ciências Sociais e Humanas': 0.00029123368336396585, 'Númer
+                o de Faltas Justificadas - Ciências Sociais e Humanas': -0.0010328235275919848, 'Número de Faltas
+                Injustificadas - Educação Física': 0.00023835714491710904, 'Número de Faltas Justificadas - Educ
+                ação Física': 0.00042338069248735267, 'Número de Faltas Injustificadas - Inglês': 0.0002490898126
+                280728, 'Número de Faltas Justificadas - Inglês': 0.00029036287006067976, 'Número de Faltas Injus
+                tificadas - Língua Estrangeira II': 0.00014446729055997418, 'Número de Faltas Justificadas - Líng
+                ua Estrangeira II': 0.00011063062017778172, 'Número de Faltas Injustificadas - Matemática': 0.000
+                4527290290292685, 'Número de Faltas Justificadas - Matemática': 0.0004159329069509254, 'Número de
+                Faltas Injustificadas - Português': 0.00024999859857974504, 'Número de Faltas Justificadas - Por
+                tuguês': 0.0005653905152789939, 'Percentagem de Faltas Injustificadas - Arte e Tecnologia': 0.000
+                1681172518839541, 'Percentagem de Faltas Justificadas - Arte e Tecnologia': 0.0003291208425757354
+                , 'Percentagem de Faltas Injustificadas - Ciências Físicas e Naturais': 0.00046438041671010915, '
+                Percentagem de Faltas Justificadas - Ciências Físicas e Naturais': -0.00011865776261987358, 'Perc
+                entagem de Faltas Injustificadas - Ciências Sociais e Humanas': 0.00018048033684173862, 'Percenta
+                gem de Faltas Justificadas - Ciências Sociais e Humanas': -0.0003145659023064153, 'Percentagem de
+                Faltas Injustificadas - Educação Física': 0.00042835149308308976, 'Percentagem de Faltas Justifi
+                cadas - Educação Física': 0.0008798888986848778, 'Percentagem de Faltas Injustificadas - Inglês':
+                0.00045468622556722835, 'Percentagem de Faltas Justificadas - Inglês': 0.0002484036603117914, 'P
+                ercentagem de Faltas Injustificadas - Língua Estrangeira II': 0.000642573741196879, 'Percentagem
+                de Faltas Justificadas - Língua Estrangeira': 0.0005932263240460695, 'Percentagem de Faltas Injus
+                tificadas - Matemática': 0.0006489290107110287, 'Percentagem de Faltas Justificadas - Matemática'
+                : 0.0002176621279691697, 'Percentagem de Faltas Injustificadas - Português': 0.000333858744654486
+                86, 'Percentagem de Faltas Justificadas - Português': 0.0005645433668189852, 'Total de Faltas Inj
+                ustificadas': 9.232475434910616e-05, 'Total de Faltas Justificadas': 0.0015898536095362583, '% de
+                Faltas Injustificadas': 0.0002122739323545493, '% de Faltas Justificadas': 1.3082612332951067e-0
+                5, 'Total de Faltas': -0.00022979579793873018, '% de Faltas': 7.496864887178374e-05, 'Prioridade
+                de Intervenção no Território': -0.00010693615081678147, 'Densidade Populacional do Território': 0
+                .0004082140755825682, 'Idade Esperada': 0.0018999548400611696, 'Escolaridade da Mãe': 0.000309791
+                25489091194, 'failed_last_year': -0.0004916233020090955, 'escalao_agrup': 0.0016162068727347384,
+                'linguaMaterna_agrup': 0.00347471484441755, 'escMae_agrup': -0.003503778376636149, 'expected_age_
+                agrup': 0.000815638032971376, 'class_avg_agrup': 0.0007247208691599432, 'negative_class_ratio_agr
+                up': -0.00014453291645898965, 'Nacionalidade': 0.00012501512086943642, 'Distrito do Agrupamento':
+                1.617955505689334e-05
+                }
+                },
+                …
+                ]
+
+            </div>
+        </div>
+
+        <!-- 8 grade -->
+        <a class="btn col-12 border  text-left h3 p-4 mt-3 mx-2"
+           data-toggle="collapse"
+           href="#collapse8"
+           role="button" aria-expanded="false"
+           aria-controls="collapse8">
+            <span class="h2 font-secondary">8 Grade</span>
+        </a>
+
+        <div class="collapse" id="collapse8">
+
+            <div class="col-12 font-secondary mt-4 h4 font-weight-bold">
+                POST
+            </div>
+
+            <div class="col-12 font-secondary mt-2 h4 font-weight-bold">
+                /api/modeling/predict/8-grade
+            </div>
+
+            <!-- description -->
+            <div class="col-12 font-secondary mt-3">
+                The endpoint receives a table in JSON with the column names in the first row, which must always be the
+                same,
+                and the following rows refer to the student’s data. The request should be sent to all school students.
+                <br> <br>
+                Example Data:
+            </div>
+
+            <!-- input -->
+            <div class="col-12 font-secondary mt-3" style="font-size: 0.6em;background-color: #fafafa">
+
+
+                <br>
+                [["nProcesso", "agrupamento", "anoLetivo", "ano", "escalao", "dataNascimento", "genero", "nacionalidade", "linguaMaterna"
+, "anoEscMae", "distrito", "class1P_ingles", "class1P_ling_estrang", "class1P_portugues", "class1P_matematica", "class1P_
+ed_fis", "class1P_art_tecn", "class1P_cienc_fis_nat", "class1P_cienc_soc_huma", "class1P_avg", "class2P_ingles", "class2P
+_ling_estrang", "class2P_portugues", "class2P_matematica", "class2P_ed_fis", "class2P_art_tecn", "class2P_cienc_fis_nat",
+ "class2P_cienc_soc_huma", "class2P_avg", "class3P_ingles", "class3P_ling_estrang", "class3P_portugues", "class3P_matemat
+ica", "class3P_ed_fis", "class3P_art_tecn", "class3P_cienc_fis_nat", "class3P_cienc_soc_huma", "class3P_avg", "negative_c
+lass_ratio_1P", "negative_class_ratio_2P", "negative_class_ratio_3P", "negative_class_ratio_nuclear_1P", "negative_class_
+ratio_not_nuclear_1P", "negative_class_ratio_nuclear_2P", "negative_class_ratio_not_nuclear_2P", "negative_class_ratio_nu
+clear_3P", "negative_class_ratio_not_nuclear_3P", "nFaltas_J_total_ingles", "nFaltas_J_total_ling_estrang", "nFaltas_J_to
+tal_matematica", "nFaltas_J_total_portugues", "nFaltas_J_total_ed_fis", "nFaltas_J_total_art_tecn", "nFaltas_J_total_cien
+c_fis_nat", "nFaltas_J_total_cienc_soc_huma", "nFaltas_J_total", "nFaltas_I_total_ingles", "nFaltas_I_total_ling_estrang"
+, "nFaltas_I_total_matematica", "nFaltas_I_total_portugues", "nFaltas_I_total_ed_fis", "nFaltas_I_total_art_tecn", "nFalt
+as_I_total_cienc_fis_nat", "nFaltas_I_total_cienc_soc_huma", "nFaltas_I_total", "nFaltas_total", "per_miss_J_total_ingles
+", "per_miss_J_total_ling_estrang", "per_miss_J_total_matematica", "per_miss_J_total_portugues", "per_miss_J_total_ed_fis
+", "per_miss_J_total_art_tecn", "per_miss_J_total_cienc_fis_nat", "per_miss_J_total_cienc_soc_huma", "per_miss_J_total",
+"per_miss_I_total_ingles", "per_miss_I_total_ling_estrang", "per_miss_I_total_matematica", "per_miss_I_total_portugues",
+"per_miss_I_total_ed_fis", "per_miss_I_total_art_tecn", "per_miss_I_total_cienc_fis_nat", "per_miss_I_total_cienc_soc_hum
+a", "per_miss_I_total", "per_miss_total", "distrito_agrup", "teip_agrup", "baixa_densidade_agrup"],<br>
+                [1, "A49", "2017
+/2018", 7, 2, 42007, "Masculino", "Portugal", "Portugal", "Básico (2º ciclo)", "Porto", 3.0, 2.0, 2.0, 3.0, 2.0, 3.0, 3.0
+, 2.5, 2.55, 3.0, 2.0, 2.0, 5.0, 4.0, 4.0, 2.5, 3.0, 2.85, 3.0, 2.0, 2.0, 3.0, 3.0, 4.0, 2.5, 3.0, 2.85, 0.4, 0.3, 0.2727
+272727, 0.5, 0.375, 0.5, 0.25, 0.5, 0.2222222222, 8.0, 13.0, 23.0, 12.0, 11.0, 4.0, 17.0, 18.0, 106.0, 0.0, 1.0, 0.0, 1.0
+, 1.0, 0.0, 0.0, 1.0, 4.0, 110.0, 0.0638297872, 0.1572580645, 0.1105769231, 0.0576923077, 0.0877659574, 0.0319148936, 0.0
+681818182, 0.0865384615, 0.6637582133, 0.0, 0.0120967742, 0.0, 0.0048076923, 0.0079787234, 0.0, 0.0, 0.0048076923, 0.0296
+908822, 0.6934490955, "Porto", 0, 0],...]
+
+            </div>
+
+
+            <!-- output -->
+            <div class="col-12 font-secondary mt-4">
+                The returned output is a list of students with:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- nProcesso, the student id sent in the input data;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- score, a value between 0 and 1, values closer to 1
+                indicate a higher risk to not pass;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- importance, a list of features with the importance in
+                the
+                prediction result, the importance of each feature
+                is a number and can be negative, higher the value, higher the importance in the predicted result.
+                <br><br>
+            </div>
+
+            <!-- example -->
+            <div class="col-12 font-secondary mt-3" style="font-size: 0.6em;background-color: #fafafa">
+                [
+                {"nProcesso": 1, "score": 0.58, "importance": {"ano": 0.0, "Escalão": 0.0, "Género": 0.0, "Língua Materna": 0.0, "Rácio d
+e Negativas em Classificação Final": -0.11, "Rácio de Negativas em Classificação Final - Disciplinas Nucleares": 0.0, "Rá
+cio de Negativas em Classificação Final - Disciplinas Não Nucleares": 0.0, "Classificação Final - Ciências Físicas e Natu
+rais": 0.0, "Classificação Final - Ciências Sociais e Humanas": 0.0, "Classificação Final - Educação Física": 0.0, "Class
+ificação Final - Inglês": 0.0, "Classificação Final - Língua Estrangeira II": 0.0, "Classificação Final - Matemática": 0.
+0, "Classificação Final - Português": 0.0, "Classificação Média Intermédia": 0.0, "Classificação Média Final": 0.0, "Núme
+ro de Faltas Injustificadas - Arte e Tecnologia": 0.0, "Número de Faltas Justificadas - Arte e Tecnologia": 0.0, "Número
+de Faltas Injustificadas - Ciências Físicas e Naturais": 0.0, "Número de Faltas Justificadas - Ciências Físicas e Naturai
+s": 0.0, "Número de Faltas Injustificadas - Ciências Sociais e Humanas": 0.0, "Número de Faltas Justificadas - Ciências S
+ociais e Humanas": 0.0, "Número de Faltas Injustificadas - Educação Física": 0.0, "Número de Faltas Justificadas - Educaç
+ão Física": 0.0, "Número de Faltas Injustificadas - Inglês": 0.0, "Número de Faltas Justificadas - Inglês": 0.0, "Número
+de Faltas Injustificadas - Língua Estrangeira II": 0.0, "Número de Faltas Justificadas - Língua Estrangeira II": 0.0, "Nú
+mero de Faltas Injustificadas - Matemática": 0.0, "Número de Faltas Justificadas - Matemática": 0.0, "Número de Faltas In
+justificadas - Português": 0.0, "Número de Faltas Justificadas - Português": 0.0, "Percentagem de Faltas Injustificadas -
+ Arte e Tecnologia": 0.0, "Percentagem de Faltas Justificadas - Arte e Tecnologia": 0.0, "Percentagem de Faltas Injustifi
+cadas - Ciências Físicas e Naturais": 0.0, "Percentagem de Faltas Justificadas - Ciências Físicas e Naturais": 0.0, "Perc
+entagem de Faltas Injustificadas - Ciências Sociais e Humanas": 0.0, "Percentagem de Faltas Justificadas - Ciências Socia
+is e Humanas": 0.0, "Percentagem de Faltas Injustificadas - Educação Física": 0.0, "Percentagem de Faltas Justificadas -
+Educação Física": 0.0, "Percentagem de Faltas Injustificadas - Inglês": 0.0, "Percentagem de Faltas Justificadas - Inglês
+": 0.0, "Percentagem de Faltas Injustificadas - Língua Estrangeira II": 0.0, "Percentagem de Faltas Justificadas - Língua
+ Estrangeira": 0.0, "Percentagem de Faltas Injustificadas - Matemática": 0.0, "Percentagem de Faltas Justificadas - Matem
+ática": 0.0, "Percentagem de Faltas Injustificadas - Português": 0.0, "Percentagem de Faltas Justificadas - Português": 0
+.0, "Total de Faltas Injustificadas": 0.0, "Total de Faltas Justificadas": 0.0, "% de Faltas Injustificadas": 0.0, "% de
+Faltas Justificadas": 0.0, "Total de Faltas": -2.37, "% de Faltas": -1.87, "Prioridade de Intervenção no Território": 0.0
+, "Densidade Populacional do Território": 0.0, "Idade Esperada": 0.0, "Escolaridade da Mãe Ord": 0.0, "failed_last_year":
+ 0.0, "Escalão do Agrupamento": -2.21, "Língua Materna do Agrupamento": 3.54, "Escolaridade da Mãe do Agrupamento": -4.29
+, "Idade Esperada do Agrupamento": -2.97, "Classificação Média do Agrupamento": 1.56, "negative_class_ratio_agrup": -0.99
+, "Escolaridade da Mãe": 0.0, "Nacionalidade": 0.0, "Distrito do Agrupamento": 0.0, "Rácio de Negativas em Classificação
+Intermédia": 1.34, "Rácio de Negativas em Classificação Intermédia - Disciplinas Nucleares": 0.0, "Rácio de Negativas em
+Classificação Intermédia - Disciplinas Não Nucleares": 0.0, "Classificação Intermédia - Inglês ou Língua Estrangeira": 0.
+0, "Classificação Intermédia - Arte e Tecnologia": 0.0, "Classificação Intermédia - Ciências Físicas e Naturais": 0.0, "C
+lassificação Intermédia - Ciências Sociais e Humanas": 0.0, "Classificação Intermédia - Educação Física": 0.0, "Classific
+ação Intermédia - Inglês": 0.0, "Classificação Intermédia - Língua Estrangeira II": 0.0, "Classificação Intermédia - Mate
+mática": 0.0, "Classificação Intermédia - Português": 0.0, "Classificação Intermédia - Outras Disciplinas": 0.0}}
+,
+                …
+                ]
+
+            </div>
+        </div>
+
+
+        <!-- 6 grade -->
+        <a class="btn col-12 border  text-left h3 p-4 mt-3 mx-2"
+           data-toggle="collapse"
+           href="#collapse6"
+           role="button" aria-expanded="false"
+           aria-controls="collapse6">
+            <span class="h2 font-secondary">6 Grade</span>
+        </a>
+
+        <div class="collapse" id="collapse6">
+
+            <div class="col-12 font-secondary mt-4 h4 font-weight-bold">
+                POST
+            </div>
+
+            <div class="col-12 font-secondary mt-2 h4 font-weight-bold">
+                /api/modeling/predict/6-grade
+            </div>
+
+            <!-- description -->
+            <div class="col-12 font-secondary mt-3">
+                The endpoint receives a table in JSON with the column names in the first row, which must always be the
+                same,
+                and the following rows refer to the student’s data. The request should be sent to all school students.
+                <br> <br>
+                Example Data:
+            </div>
+
+            <!-- input -->
+            <div class="col-12 font-secondary mt-3" style="font-size: 0.6em;background-color: #fafafa">
+
+
+                <br>
+                [["nProcesso", "agrupamento", "anoLetivo", "ano", "escalao", "dataNascimento", "genero",
+                "nacionalidade", "linguaMaterna"
+                , "anoEscMae", "distrito", "class1P_ingles_ling_estr", "class1P_portugues", "class1P_matematica",
+                "class1P_ed_fis", "clas
+                s1P_art_tecn", "class1P_cienc_fis_nat", "class1P_cienc_soc_huma", "class1P_avg",
+                "class2P_ingles_ling_estr", "class2P_por
+                tugues", "class2P_matematica", "class2P_ed_fis", "class2P_art_tecn", "class2P_cienc_fis_nat",
+                "class2P_cienc_soc_huma", "
+                class2P_avg", "class3P_ingles_ling_estr", "class3P_portugues", "class3P_matematica", "class3P_ed_fis",
+                "class3P_art_tecn"
+                , "class3P_cienc_fis_nat", "class3P_cienc_soc_huma", "class3P_avg", "negative_class_ratio_1P",
+                "negative_class_ratio_2P",
+                "negative_class_ratio_3P", "negative_class_ratio_nuclear_1P", "negative_class_ratio_not_nuclear_1P",
+                "negative_class_rat
+                io_nuclear_2P", "negative_class_ratio_not_nuclear_2P", "negative_class_ratio_nuclear_3P",
+                "negative_class_ratio_not_nucle
+                ar_3P", "nFaltas_J_total_ingles", "nFaltas_J_total_ling_estrang", "nFaltas_J_total_matematica",
+                "nFaltas_J_total_portugue
+                s", "nFaltas_J_total_ed_fis", "nFaltas_J_total_art_tecn", "nFaltas_J_total_cienc_fis_nat",
+                "nFaltas_J_total_cienc_soc_hum
+                a", "nFaltas_J_total", "nFaltas_I_total_ingles", "nFaltas_I_total_ling_estrang",
+                "nFaltas_I_total_matematica", "nFaltas_I
+                _total_portugues", "nFaltas_I_total_ed_fis", "nFaltas_I_total_art_tecn",
+                "nFaltas_I_total_cienc_fis_nat", "nFaltas_I_tota
+                l_cienc_soc_huma", "nFaltas_I_total", "nFaltas_total", "per_miss_J_total_ingles",
+                "per_miss_J_total_ling_estrang", "per_m
+                iss_J_total_matematica", "per_miss_J_total_portugues", "per_miss_J_total_ed_fis",
+                "per_miss_J_total_art_tecn", "per_miss_
+                J_total_cienc_fis_nat", "per_miss_J_total_cienc_soc_huma", "per_miss_J_total",
+                "per_miss_I_total_ingles", "per_miss_I_tot
+                al_ling_estrang", "per_miss_I_total_matematica", "per_miss_I_total_portugues",
+                "per_miss_I_total_ed_fis", "per_miss_I_tot
+                al_art_tecn", "per_miss_I_total_cienc_fis_nat", "per_miss_I_total_cienc_soc_huma", "per_miss_I_total",
+                "per_miss_total",
+                "distrito_agrup", "teip_agrup", "baixa_densidade_agrup"],
+                <br>
+                [1, "A49", "2017/2018", 5, 3, 82007, "Feminino", "Portugal
+                ", "Portugal", "Secundário", "Lisboa", 5.0, 4.0, 3.0, 4.0, 3.0, 4.0, 3.0, 4.2222222222, 4.0, 4.0, 4.0,
+                4.0, 4.0, 4.0, 5.0,
+                4.1111111111, 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 5.0, 4.1666666667, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 0.
+                0, 5.0, 3.0, 6.0, 2.0, 2.0, 18.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 18.0, 0.0, 0.0, 0.0,
+                0.0240384615, 0.02393
+                61702, 0.0240641711, 0.0159574468, 0.012, 0.0999962497, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                0.0999962497, "Lisboa", 0, 0]]
+
+
+            </div>
+
+
+            <!-- output -->
+            <div class="col-12 font-secondary mt-4">
+                The returned output is a list of students with:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- nProcesso, the student id sent in the input data;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- score, a value between 0 and 1, values closer to 1
+                indicate a higher risk to not pass;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- importance, a list of features with the importance in
+                the
+                prediction result, the importance of each feature
+                is a number and can be negative, higher the value, higher the importance in the predicted result.
+                <br><br>
+            </div>
+
+            <!-- example -->
+            <div class="col-12 font-secondary mt-3" style="font-size: 0.6em;background-color: #fafafa">
+                [
+                {"nProcesso": 1, "score": 0.55, "importance": {"ano": 0.0, "Escalão": 0.04, "Género": -0.02, "Língua
+                Materna": 0.0, "Ráci
+                o de Negativas em Classificação Final": 0.04, "Rácio de Negativas em Classificação Final - Disciplinas
+                Nucleares": 0.02,
+                "Rácio de Negativas em Classificação Final - Disciplinas Não Nucleares": 0.01, "Classificação Final -
+                Inglês ou Língua Es
+                trangeira": -0.01, "Classificação Final - Arte e Tecnologia": 0.04, "Classificação Final - Ciências
+                Físicas e Naturais":
+                0.01, "Classificação Final - Ciências Sociais e Humanas": -0.01, "Classificação Final - Educação
+                Física": 0.12, "Classifi
+                cação Final - Matemática": -0.0, "Classificação Final - Português": 0.01, "Classificação Média
+                Intermédia": 0.06, "Classi
+                ficação Média Final": -0.0, "Número de Faltas Injustificadas - Arte e Tecnologia": 0.0, "Número de
+                Faltas Justificadas -
+                Arte e Tecnologia": -0.05, "Número de Faltas Injustificadas - Ciências Físicas e Naturais": 0.0, "Número
+                de Faltas Justif
+                icadas - Ciências Físicas e Naturais": 0.04, "Número de Faltas Injustificadas - Ciências Sociais e
+                Humanas": 0.01, "Númer
+                o de Faltas Justificadas - Ciências Sociais e Humanas": 0.05, "Número de Faltas Injustificadas -
+                Educação Física": 0.01,
+                "Número de Faltas Justificadas - Educação Física": -0.19, "Número de Faltas Injustificadas - Inglês":
+                0.0, "Número de Fal
+                tas Justificadas - Inglês": -0.03, "Número de Faltas Injustificadas - Matemática": 0.01, "Número de
+                Faltas Justificadas -
+                Matemática": -0.07, "Número de Faltas Injustificadas - Português": 0.01, "Número de Faltas Justificadas
+                - Português": -0
+                .0, "Percentagem de Faltas Injustificadas - Arte e Tecnologia": -0.0, "Percentagem de Faltas
+                Justificadas - Arte e Tecnol
+                ogia": -0.07, "Percentagem de Faltas Injustificadas - Ciências Físicas e Naturais": 0.0, "Percentagem de
+                Faltas Justifica
+                das - Ciências Físicas e Naturais": 0.03, "Percentagem de Faltas Injustificadas - Ciências Sociais e
+                Humanas": 0.01, "Per
+                centagem de Faltas Justificadas - Ciências Sociais e Humanas": 0.16, "Percentagem de Faltas
+                Injustificadas - Educação Fís
+                ica": 0.01, "Percentagem de Faltas Justificadas - Educação Física": -0.22, "Percentagem de Faltas
+                Injustificadas - Inglês
+                ": -0.0, "Percentagem de Faltas Justificadas - Inglês": -0.01, "Percentagem de Faltas Injustificadas -
+                Língua Estrangeira
+                II": 0.0, "Percentagem de Faltas Justificadas - Língua Estrangeira": 0.0, "Percentagem de Faltas
+                Injustificadas - Matemá
+                tica": 0.01, "Percentagem de Faltas Justificadas - Matemática": -0.08, "Percentagem de Faltas
+                Injustificadas - Português"
+                : 0.01, "Percentagem de Faltas Justificadas - Português": -0.02, "Total de Faltas Injustificadas": 0.0,
+                "Total de Faltas
+                Justificadas": -0.02, "% de Faltas Injustificadas": 0.01, "% de Faltas Justificadas": -0.02, "Total de
+                Faltas": -0.03, "%
+                de Faltas": -0.06, "Prioridade de Intervenção no Território": -0.02, "Densidade Populacional do
+                Território": 0.03, "Idad
+                e Esperada": -0.01, "Escolaridade da Mãe Ord": -0.06, "Escolaridade da Mãe": -0.04, "Nacionalidade":
+                0.0, "Distrito do Ag
+                rupamento": 1.59, "Rácio de Negativas em Classificação Intermédia": 0.0, "Rácio de Negativas em
+                Classificação Intermédia
+                - Disciplinas Nucleares": 0.0, "Rácio de Negativas em Classificação Intermédia - Disciplinas Não
+                Nucleares": 0.02, "Class
+                ificação Intermédia - Inglês ou Língua Estrangeira": -0.14, "Classificação Intermédia - Arte e
+                Tecnologia": 0.05, "Classi
+                ficação Intermédia - Ciências Físicas e Naturais": -0.0, "Classificação Intermédia - Ciências Sociais e
+                Humanas": -0.09,
+                "Classificação Intermédia - Educação Física": 0.03, "Classificação Intermédia - Inglês": 0.0,
+                "Classificação Intermédia -
+                Língua Estrangeira II": 0.0, "Classificação Intermédia - Matemática": -0.0, "Classificação Intermédia -
+                Português": 0.01
+                , "Classificação Intermédia - Outras Disciplinas": 0.0}},
+                …
+                ]
+
+            </div>
+        </div>
+
+        <!-- history -->
+        <a class="btn col-12 border  text-left h3 p-4 mt-3 mx-2"
+           data-toggle="collapse"
+           href="#collapseh"
+           role="button" aria-expanded="false"
+           aria-controls="collapseh">
+            <span class="h2 font-secondary">History</span>
+        </a>
+
+        <div class="collapse" id="collapseh">
+
+            <div class="col-12 font-secondary mt-4 h4 font-weight-bold">
+                GET
+            </div>
+
+            <div class="col-12 font-secondary mt-2 h4 font-weight-bold">
+                /api/history
+            </div>
+
+            <!-- description -->
+            <div class="col-12 font-secondary mt-3">
+                Returns the data send to the API and the output.
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var baseUrl = window.location.origin;
+
+    var swaggerUrl = baseUrl + "/swagger";
+    $("#swagger").attr("href", swaggerUrl);
+
+    var redocUrl = baseUrl + "/redoc";
+    $("#redoc").attr("href", redocUrl);
+
+    function renew() {
+        var form = $("<form/>",
+            {
+                action: "{% url 'management.api' %}",
+                method: "post"
+            });
+
+        form.append($('{% csrf_token %}'));
+        form.appendTo("body").submit();
+    }
+
+</script>
+{% endblock %}

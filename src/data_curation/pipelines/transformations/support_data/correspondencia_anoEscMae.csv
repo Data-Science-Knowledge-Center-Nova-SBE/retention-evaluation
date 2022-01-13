@@ -1,0 +1,12 @@
+,anoEscMae_raw,anoEscMae_agg_ord,anoEscMae_agg_cat
+0,Secundário,3,secondary
+1,Formação Desconhecida,0,unknown
+2,Básico (1º ciclo),0,none
+3,Básico (2º ciclo),1,basic_2nd
+4,Básico (3º ciclo),2,basic_3rd
+5,Mestrado,7,college
+6,Licenciatura,6,college
+7,Sem Habilitações,0,none
+8,Bacharelato,6,college
+9,Outra,0,unknown
+10,Pós-graduação,8,college

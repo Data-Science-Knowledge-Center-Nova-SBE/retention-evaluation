@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+
+  web:
+    container_name: 'retention-evaluation'
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./media:/code/media

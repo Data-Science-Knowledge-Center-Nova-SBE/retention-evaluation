@@ -1,0 +1,15 @@
+.idea/
+*.pyc
+venv/
+outputs/
+notebooks/
+default_models/model_6_grade.pkl
+default_models/model_8_grade.pkl
+default_models/model_9_grade.pkl
+environment.py
+src/data_curation/dataset_manager/.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+src/modeling/model_manager/temp_files/*.pkl
+src/modeling/model_manager/temp_files/model
+src/modeling/model_manager/temp_files/y_pred
+src/modeling/model_manager/temp_files/y_test
