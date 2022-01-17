@@ -7,7 +7,6 @@ from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-import environment
 from apps.api import modeling
 from apps.web.management.models import ProjectState, LogActivity
 import requests
